@@ -22,6 +22,10 @@ func (h *Handller) getUsers(c *gin.Context) {
 		c.JSON(500, gin.H{"error": err.Error()})
 		return
 	}
+	if len(users) == 0 {
+		c.JSON(200, gin.H{"message": "Nenhum usuário encontrado"})
+		return
+	}
 	c.JSON(200, users)
 
 }

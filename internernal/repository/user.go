@@ -15,7 +15,7 @@ func NewUser(db *sql.DB) *User {
 }
 
 func (r *User) CreateUser(user *models.User) error {
-	query := "INSERT INTO users (name, email, Pass) VALUES ($1, $2, $3)"
+	query := "INSERT INTO users (name, email, pass) VALUES ($1, $2, $3)"
 	result, err := r.DB.Exec(query, user.Name, user.Email, user.Pass)
 	if err != nil {
 		return err
@@ -28,7 +28,7 @@ func (r *User) CreateUser(user *models.User) error {
 	return nil
 }
 func (r *User) UpdateUser(user *models.User) error {
-	query := "UPDATE users SET name = $1, email = $2, Pass = $3 WHERE id = $4"
+	query := "UPDATE users SET name = $1, email = $2, pass = $3 WHERE id = $4"
 	result, err := r.DB.Exec(query, user.Name, user.Email, user.Pass, user.ID)
 	if err != nil {
 		return err
