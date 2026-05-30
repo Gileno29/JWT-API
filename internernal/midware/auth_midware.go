@@ -16,14 +16,14 @@ func AuthMiddleware() gin.HandlerFunc {
 		// Pega o cabeçalho Authorization
 		authHeader := c.GetHeader("Authorization")
 		if authHeader == "" {
-			c.JSON(http.StatusUnauthorized, gin.H{"error": "Token não fornecido"})
+			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "Token não fornecido"})
 			return
 		}
 
 		// Divide o cabeçalho para pegar apenas o token (formato: Bearer <token>)
 		parts := strings.Split(authHeader, " ")
 		if len(parts) != 2 || strings.ToLower(parts[0]) != "bearer" {
-			c.JSON(http.StatusUnauthorized, gin.H{"error": "Formato de token inválido"})
+			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "Formato de token inválido"})
 			return
 		}
 
@@ -32,7 +32,7 @@ func AuthMiddleware() gin.HandlerFunc {
 		// Valida e faz o parsing do token
 		_, err := jwt.ValidateToken(tokenString)
 		if err != nil {
-			c.JSON(http.StatusUnauthorized, gin.H{"error": "Token inválido ou expirado"})
+			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "Token inválido ou expirado"})
 			return
 		}
 
