@@ -54,7 +54,7 @@ func (r *User) DeleteUser(user *models.User) error {
 	return nil
 }
 func (r *User) GetUser(id uint64) (*models.User, error) {
-	var user *models.User
+	user := &models.User{}
 	query := "SELECT * FROM users WHERE id = $1"
 	row := r.DB.QueryRow(query, id)
 	if err := row.Scan(&user.ID, &user.Name, &user.Email, &user.Pass); err != nil {
@@ -64,7 +64,7 @@ func (r *User) GetUser(id uint64) (*models.User, error) {
 }
 
 func (r *User) GetUserByEmail(email string) (*models.User, error) {
-	var user *models.User
+	user := &models.User{}
 	query := "SELECT * FROM users WHERE email = $1"
 	row := r.DB.QueryRow(query, email)
 	if err := row.Scan(&user.ID, &user.Name, &user.Email, &user.Pass); err != nil {

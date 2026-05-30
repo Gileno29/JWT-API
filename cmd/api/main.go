@@ -3,7 +3,6 @@ package main
 import (
 	"jwt-api/internernal/database"
 	"jwt-api/internernal/http"
-	"jwt-api/internernal/midware"
 	"jwt-api/internernal/repository"
 	"os"
 	"strconv"
@@ -28,7 +27,6 @@ func main() {
 	handler := http.NewHandler(userRepository)
 
 	router := gin.Default()
-	router.Use(midware.AuthMiddleware())
 	http.SetUpRoutesUsers(router, handler)
 
 	router.Run(":8090")
