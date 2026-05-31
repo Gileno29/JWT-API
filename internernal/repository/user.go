@@ -18,7 +18,7 @@ func (r *User) CreateUser(user *models.User) error {
 	query := "INSERT INTO users (name, email, pass) VALUES ($1, $2, $3)"
 	result, err := r.DB.Exec(query, user.Name, user.Email, user.Pass)
 	if err != nil {
-		return err
+		return errors.New("erro ao registrar usuario: " + err.Error())
 	}
 	if rowsAffected, err := result.RowsAffected(); err != nil {
 		return err
@@ -68,7 +68,7 @@ func (r *User) GetUserByEmail(email string) (*models.User, error) {
 	query := "SELECT * FROM users WHERE email = $1"
 	row := r.DB.QueryRow(query, email)
 	if err := row.Scan(&user.ID, &user.Name, &user.Email, &user.Pass); err != nil {
-		return nil, err
+		return nil, errors.New("erro ao buscar usuario" + err.Error())
 	}
 	return user, nil
 }
@@ -78,7 +78,7 @@ func (r *User) GetAll() ([]models.User, error) {
 	query := "SELECT * FROM users"
 	rows, err := r.DB.Query(query)
 	if err != nil {
-		return nil, err
+		return nil, errors.New("erro ao buscar usuarios: " + err.Error())
 	}
 	defer rows.Close()
 	for rows.Next() {
@@ -89,4 +89,17 @@ func (r *User) GetAll() ([]models.User, error) {
 		users = append(users, user)
 	}
 	return users, nil
+}
+
+func (r *User) Login(email string, pass string) error {
+	rows, err := r.DB.Query("SELECT * FROM users WHERE email = $1 AND pass = $2", email, pass)
+	if err != nil {
+		return errors.New("usuário ou senha inválidos")
+	}
+	defer rows.Close()
+	if rows.Next() {
+		return nil
+	}
+	return errors.New("usuário ou senha inválidos")
+
 }

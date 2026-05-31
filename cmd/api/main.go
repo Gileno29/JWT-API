@@ -4,6 +4,7 @@ import (
 	"jwt-api/internernal/database"
 	"jwt-api/internernal/http"
 	"jwt-api/internernal/repository"
+	"jwt-api/internernal/service"
 	"os"
 	"strconv"
 
@@ -24,7 +25,8 @@ func main() {
 	defer conn.Close()
 
 	userRepository := repository.NewUser(conn)
-	handler := http.NewHandler(userRepository)
+	userService := service.NewUserService(userRepository)
+	handler := http.NewHandler(userService)
 
 	router := gin.Default()
 	http.SetUpRoutesUsers(router, handler)

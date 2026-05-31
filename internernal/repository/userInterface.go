@@ -9,4 +9,5 @@ type UserInterface interface {
 	GetUser(id uint64) (*models.User, error)
 	GetUserByEmail(email string) (*models.User, error)
 	GetAll() ([]models.User, error)
+	Login(email, pass string) error
 }

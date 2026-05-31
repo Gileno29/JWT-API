@@ -15,11 +15,15 @@ func NewJWT(secretKey []byte) *JWT {
 	return &JWT{secretKey: secretKey}
 }
 
-func (j *JWT) GenerateToken(userID string) (string, error) {
+func (j *JWT) GenerateToken(userID uint64, email string) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256,
-		jwt.MapClaims{
-			"user_id": userID,
-			"exp":     time.Now().Add(time.Hour * 24).Unix(),
+		UserClaims{
+			ID:    userID,
+			Email: email,
+			RegisteredClaims: jwt.RegisteredClaims{
+				ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Hour * 24)),
+				IssuedAt:  jwt.NewNumericDate(time.Now()),
+			},
 		})
 
 	tokenString, err := token.SignedString(j.secretKey)
